@@ -76,16 +76,16 @@ class MiListener(ParseTreeListener):
     def exitFactor(self, ctx:compiladoresParser.FactorContext):
         print ("Factor OUT -> |" + ctx.getText() + "|")
 
-    def enterAsignation(self, ctx:compiladoresParser.AsignationContext):
-        print("hola soy una asignacion")
+    def enterDeclaration(self, ctx:compiladoresParser.DeclarationContext):
+        print("Declaracion IN")
     
-    def exitAsignation(self, ctx:compiladoresParser.AsignationContext):
+    def exitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
         tipo = ctx.getChild(0).getChild(0)
              
-        temp = ctx.getChild(1)
-        print("tipo:" + str(tipo))
+        temp = ctx.getChild(1).getChild(0)
+        print("tipo:" + str(tipo) + " id:" + str(temp))
         
         if temp not in self.tabla.ts[-1]:
             self.tabla.ts[-1][str(temp)] = variable(str(temp), str(tipo))
-        print(self.tabla.ts[-1][str(temp)].name)
+        
         

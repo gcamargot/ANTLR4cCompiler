@@ -55,6 +55,7 @@ instruction : doWhileInstruction
             | whileInstruction
             | ifInstruction
             | forInstruction
+            | declaration
             | asignation
             | comparison
             | instructionBlock
@@ -130,6 +131,9 @@ f : PRODUCTO factor f
    |
   ;
 
-asignation: tipo ID ASIGNACION itop;
+
+declaration: tipo asignation | tipo ID PUNTOYCOMA;
+
+asignation: ID ASIGNACION itop;
 
 tipo: INT | FLOAT;
