@@ -4,7 +4,7 @@ if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
 else:
     from compiladoresParser import compiladoresParser
-from tablaValores import tablaValores
+from tablaValores import *
 
 
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
@@ -15,7 +15,6 @@ class MiListener(ParseTreeListener):
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
         print ("ProgramContext IN -> |" + ctx.getText() + "|")
-        self.tabla.add_context();
 
 
     # Exit a parse tree produced by compiladoresParser#program.
@@ -25,44 +24,42 @@ class MiListener(ParseTreeListener):
 
 
         # Enter a parse tree produced by compiladoresParser#instruction.
-    def enterInstruction(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionContext IN -> {" + ctx.getText() + "}")
+    def enterInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
+        print ("InstructionBlock IN -> {" + ctx.getText() + "}")
         self.tabla.add_context();
 
 
     # Exit a parse tree produced by compiladoresParser#Instruction.
-    def exitInstruction(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionContext OUT -> {" + ctx.getText() + "}")
+    def exitInstructionBock(self, ctx:compiladoresParser.InstructionContext):
+        print ("InstructionBlock OUT -> {" + ctx.getText() + "}")
         print("Tiene " + str(ctx.getChildCount()) + " hijos")
         self.tabla.del_context();
 
     def enterDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
         print ("DoWhileInstContext IN -> |" + ctx.getText() + "|")
-        self.tabla.add_context();
+        
 
 
     # Exit a parse tree produced by compiladoresParser#WhileInstructionContext.
     def exitDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
         print ("DoWhileInstContext OUT -> |" + ctx.getText() + "|")
-        self.tabla.del_context();
+        
 
         # Enter a parse tree produced by compiladoresParser#WhileInstruction.
     def enterWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
         print ("WhileInstContext IN -> |" + ctx.getText() + "|")
-        self.tabla.add_context();
+        
 
 
     # Exit a parse tree produced by compiladoresParser#WhileInstruction.
     def exitWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
         print ("WhileInstContext OUT -> |" + ctx.getText() + "|")
-        self.tabla.del_context();
+        
 
     def enterIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
         print("IfInstruction IN -> (" + ctx.getText() + ")")
-        self.tabla.add_context();
     def exitIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
         print("IfInstruction OUT -> (" + ctx.getText() + ")")
-        self.tabla.del_context();
 
     
 
@@ -83,8 +80,12 @@ class MiListener(ParseTreeListener):
         print("hola soy una asignacion")
     
     def exitAsignation(self, ctx:compiladoresParser.AsignationContext):
-        temp = str(ctx.getChild(0))
-        print("text:" + temp)
-        self.tabla.ts[-1][temp.name] = temp
-
+        tipo = ctx.getChild(0).getChild(0)
+             
+        temp = ctx.getChild(1)
+        print("tipo:" + str(tipo))
+        
+        if temp not in self.tabla.ts[-1]:
+            self.tabla.ts[-1][str(temp)] = variable(str(temp), str(tipo))
+        print(self.tabla.ts[-1][str(temp)].name)
         

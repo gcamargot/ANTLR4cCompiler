@@ -14,7 +14,7 @@
             "input": "input/aritmetica.txt",
             // "input": "input/programa.c",
             // Simbolo inicial
-            "startRule": "itop",
+            "startRule": "program",
             // Muestra Arbol Sintactico
             "printParseTree": true,
             "visualParseTree": true
@@ -25,7 +25,6 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true
-        }
+                }
     ]
 }

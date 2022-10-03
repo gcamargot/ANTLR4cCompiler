@@ -15,7 +15,7 @@ class tablaValores (metaclass = Singleton):
         self.ts[-1][id.name] : id
 
     def add_context(self):
-        self.ts.append([])
+        self.ts.append(dict())
 
     def del_context(self):
         self.ts.pop();
@@ -33,6 +33,9 @@ class id:
         self.type = type
         self.initialized = False
         self.used = False
+
+    def getName(self):
+        return self.name
 
 class variable(id):
     pass

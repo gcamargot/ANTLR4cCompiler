@@ -130,4 +130,6 @@ f : PRODUCTO factor f
    |
   ;
 
-asignation: ID ASIGNACION itop;
+asignation: tipo ID ASIGNACION itop;
+
+tipo: INT | FLOAT;
