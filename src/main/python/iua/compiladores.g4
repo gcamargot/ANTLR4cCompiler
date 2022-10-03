@@ -2,68 +2,132 @@ grammar compiladores;
 
 fragment LETRA : [A-Za-z] ;
 fragment DIGITO : [0-9] ;
-
-PA : '(' ;
-PC : ')' ;
-LLA : '{' ;
-LLC : '}' ;
-PYC : ';' ;
-ASSIG : '=' ;
-SUMA : '+' ;
-MULT : '*' ;
-
-INT : 'int' ;
-
+PUNTOYCOMA : ';';
+COMA : ',';
+PUNTO : '.';
+LLAVEABRE : '{';
+LLAVECIERRA : '}';
+CORCHETEABRE : '[';
+CORCHETECIERRA : ']';
+PARENTESISCIERRA : ')';
+PARENTESISABRE : '(';
+MAS: '+';
+MENOS: '-';
+PRODUCTO: '*';
+DIVISION: '/';
+MODULO : '%';
+ASIGNACION : '=';
+MENOR : '<';
+MENORIGUAL : '<=';
+MAYOR : '>';
+MAYORIGUAL : '>=';
+IGUAL: '==';
+DISTINTO : '!=';
+NOT : '!';
+AND : '&&';
+OR : '||';
+IF : 'if';
+FOR : 'for';
+WHILE : 'while';
+DO : 'do';
+INT : 'int';
+FLOAT : 'float';
+FLOTANTES : DIGITO PUNTO DIGITO;
+FLOTANTESNEGATIVOS : '-' DIGITO PUNTO DIGITO;
+HEXADECIMALES : '0''x' ([a-f]|[A-Z]|DIGITO)+;
 NUMERO : DIGITO+ ;
-
 ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
 
-WS : [ \t\n\r] -> skip ; 
+WS : [ \t\n\r] -> skip;
+OTRO : . ;
 
-programa : instrucciones EOF ;
 
-instrucciones : instruccion instrucciones
+//Verifico que todos los parentesis se abran y se cierren fragment
+//Arbol sintactico descendente
+
+program : instructions EOF || PUNTOYCOMA;
+
+instructions : instruction instructions
               |
               ;
 
-instruccion : bloque
-            | declaracion PYC
-            // | asignacion PYC
-            // | bloqueif
-            // | bloquefor
-            // | bloquewhile
+instruction : doWhileInstruction
+            | whileInstruction
+            | ifInstruction
+            | forInstruction
+            | asignation
+            | comparison
+            | instructionBlock
+            | operation
             ;
 
-bloque : LLA instrucciones LLC ;
+doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA PUNTOYCOMA
+                    ;
 
-declaracion : tdato ID 
-            // | tdato ID ASSIG ... ?
+whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction 
+                  ;
+
+ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction
+                ;
+
+forInstruction : FOR PARENTESISABRE instruction PUNTOYCOMA instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
+                ;
+
+dataType :  INT
+          | FLOAT
+          ;
+
+instructionBlock : LLAVEABRE instructions LLAVECIERRA;
+
+comparison :  ID compare ID
+            | ID compare NUMERO
+            | NUMERO compare NUMERO
+            | NUMERO compare ID
             ;
 
-tdato : INT
-      ;
+compare :   MENOR
+              | MAYOR
+              | IGUAL
+              | DISTINTO
+              ;
 
-itop : oparit itop
-     |
-     ;
-// c = a + b + d + f / r * q
-oparit : exp ;
+//2+2&&4*0
 
-exp : term t ;
+itop :  operation itop
+        |
+        ;
 
-term : factor f ;
+operation : expression ;
 
-t : SUMA term t
-  |
+expression : lor logicOr ;
+
+logicOr : land logicAnd;
+
+lor:OR logicOr lor
+    |
+    ;
+
+logicAnd: term t;
+
+land :  AND land logicAnd
+        |
+        ;
+
+term : f factor ;
+
+t : MAS term t
+   | MENOS term t
+   |
   ;
 
 factor : ID
        | NUMERO
-       | PA exp PC
+       | PARENTESISABRE expression PARENTESISCIERRA
        ;
 
-f : MULT factor f
-  |
+f : PRODUCTO factor f
+   | DIVISION factor f
+   |
   ;
 
-// bloquewhile : PA comparacion/opal PC instruccion ;
+asignation: ID ASIGNACION itop;
