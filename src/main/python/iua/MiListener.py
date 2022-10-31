@@ -14,6 +14,8 @@ class MiListener(ParseTreeListener):
     tabla = tablaValores();
     idList = []
     initList = []
+    paramList = dict()
+    struct = 0
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
@@ -83,20 +85,28 @@ class MiListener(ParseTreeListener):
         print("Declaracion IN")
     
     def exitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
-        tipo = ctx.getChild(0).getChild(0)
+        tipo = str(ctx.getChild(0).getChild(0))
+     
         for temp in self.idList:
             if not self.tabla.findKey(temp):
-                self.tabla.ts[-1][temp] = variable(temp, tipo)
+                if self.struct == "variable":
+                    self.tabla.ts[-1][temp] = variable(temp, tipo)
+                if self.struct == "function":
+                    self.tabla.ts[-1][temp] = funcion(temp, tipo, self.paramList)
             else:
                 print("La variable " + str(temp) + " ya existe.")
         for temp in self.initList:
             if self.tabla.findKey(temp):
-                self.tabla.ts[-1][temp].initialized = True
-                print(temp + " esta inicializada")
+                for context in self.tabla.ts:
+                    if(temp in context):
+                        context[temp].initialized = True
+
+        print(self.tabla.ts[-1])
 
         self.idList = []
         self.initList = []
-
+        self.struct = 0
+        self.paramList = []
 
 
     def enterAsignation(self, ctx:compiladoresParser.AsignationContext):
@@ -131,11 +141,38 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#declarationM.
     def exitDeclarationM(self, ctx:compiladoresParser.DeclarationMContext):
         name = str(ctx.getChild(0))
-        
+        self.struct = "variable"
         if name[0].isalpha() :
             self.idList.append(str(name))
 
 
-        
-        
+    # Enter a parse tree produced by compiladoresParser#declaracionF.
+    def enterDeclaracionF(self, ctx:compiladoresParser.DeclaracionFContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#declaracionF.
+    def exitDeclaracionF(self, ctx:compiladoresParser.DeclaracionFContext):
+        name = str(ctx.getChild(0))
+        self.struct = "function"
+        self.idList.append(name)
+
+        for temp in self.paramList.keys():
+            if not self.tabla.findKey(temp):
+                self.tabla.ts[-1][temp] = variable(temp, self.paramList[temp])
+            else:
+                print("La variable \"" + temp + "\" ya existe en este contexto")
+
+
+
+
+    # Enter a parse tree produced by compiladoresParser#parameter.
+    def enterParameter(self, ctx:compiladoresParser.ParameterContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#parameter.
+    def exitParameter(self, ctx:compiladoresParser.ParameterContext):
+        name = str(ctx.getChild(1))
+        type = str(ctx.getChild(0).getChild(0))
+        if not self.tabla.findKey(name):
+            self.paramList[name] = type  
         

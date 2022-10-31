@@ -1,6 +1,6 @@
-if( a == b){
-    if(a == 2){
-        int c = 12
-    }
-    
+int a(int b, int c) 
+{
+    int b = 10, d;
+    a + b;
 }
+

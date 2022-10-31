@@ -37,6 +37,7 @@ FLOTANTESNEGATIVOS : '-' DIGITO PUNTO DIGITO;
 HEXADECIMALES : '0''x' ([a-f]|[A-Z]|DIGITO)+;
 NUMERO : DIGITO+ ;
 ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
+RETURN: 'return';
 
 WS : [ \t\n\r] -> skip;
 OTRO : . ;
@@ -48,7 +49,8 @@ OTRO : . ;
 program : instructions EOF | PUNTOYCOMA;
 
 instructions : instruction instructions
-              |
+              | instruction PUNTOYCOMA
+              | 
               ;
 
 instruction : doWhileInstruction
@@ -58,8 +60,9 @@ instruction : doWhileInstruction
             | declaration
             | asignation
             | comparison
-            | instructionBlock
             | operation
+            | instructionBlock
+            
             ;
 
 doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA
@@ -73,11 +76,6 @@ ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction
 
 forInstruction : FOR PARENTESISABRE instruction PUNTOYCOMA instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
                 ;
-
-dataType :  INT
-          | FLOAT
-          ;
-
 instructionBlock : LLAVEABRE instructions LLAVECIERRA;
 
 comparison :  ID compare ID
@@ -132,7 +130,9 @@ f : PRODUCTO factor f
   ;
 
 
-declaration: tipo declarationM PUNTOYCOMA;
+declaration: tipo declarationM PUNTOYCOMA | tipo declaracionF ;
+
+declaracionF: ID PARENTESISABRE parameters PARENTESISCIERRA;
 
 declarationM : ID 
              | ID COMA declarationM 
@@ -141,6 +141,13 @@ declarationM : ID
 
 asignation: ID ASIGNACION itop PUNTOYCOMA;
 
+parameter: tipo ID ;
+
+parameters: parameter  COMA parameters 
+          | parameter 
+          | ;
+
 init: ID ASIGNACION itop;
 
 tipo: INT | FLOAT;
+
