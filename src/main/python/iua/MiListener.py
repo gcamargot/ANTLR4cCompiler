@@ -1,3 +1,4 @@
+from curses.ascii import isalpha
 from traceback import print_tb
 from antlr4 import *
 if __name__ is not None and "." in __name__:
@@ -11,6 +12,8 @@ from tablaValores import *
 class MiListener(ParseTreeListener):
 
     tabla = tablaValores();
+    idList = []
+    initList = []
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
@@ -81,10 +84,20 @@ class MiListener(ParseTreeListener):
     
     def exitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
         tipo = ctx.getChild(0).getChild(0)
-             
-        temp = ctx.getChild(1).getChild(0)        
-        if temp not in self.tabla.ts[-1]:
-            self.tabla.ts[-1][str(temp)] = variable(str(temp), str(tipo))
+        for temp in self.idList:
+            if not self.tabla.findKey(temp):
+                self.tabla.ts[-1][temp] = variable(temp, tipo)
+            else:
+                print("La variable " + str(temp) + " ya existe.")
+        for temp in self.initList:
+            if self.tabla.findKey(temp):
+                self.tabla.ts[-1][temp].initialized = True
+                print(temp + " esta inicializada")
+
+        self.idList = []
+        self.initList = []
+
+
 
     def enterAsignation(self, ctx:compiladoresParser.AsignationContext):
         print("Asignation in:")
@@ -95,11 +108,34 @@ class MiListener(ParseTreeListener):
         name = ctx.getChild(0)
 
         if self.tabla.findKey(str(name)):
-            self.tabla.ts[-1][str(name).initialized] = True
+            self.tabla.ts[-1][str(name)].initialized = True
         else:
-             print("Error: La variable no esta declarada") 
+            print("Error: La variable \"" + str(name) + "\" no esta declarada") 
 
+    # Enter a parse tree produced by compiladoresParser#init.
+    def enterInit(self, ctx:compiladoresParser.InitContext):
+        print("Init in")
+
+    # Exit a parse tree produced by compiladoresParser#init.
+    def exitInit(self, ctx:compiladoresParser.InitContext):
+        name = str(ctx.getChild(0))
+        self.idList.append(name)   
+        self.initList.append(name)
+        print("Init exit")
+
+
+      # Enter a parse tree produced by compiladoresParser#declarationM.
+    def enterDeclarationM(self, ctx:compiladoresParser.DeclarationMContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#declarationM.
+    def exitDeclarationM(self, ctx:compiladoresParser.DeclarationMContext):
+        name = str(ctx.getChild(0))
         
+        if name[0].isalpha() :
+            self.idList.append(str(name))
+
+
         
         
         

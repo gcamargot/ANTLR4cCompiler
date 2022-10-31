@@ -132,8 +132,15 @@ f : PRODUCTO factor f
   ;
 
 
-declaration: tipo asignation | tipo ID PUNTOYCOMA;
+declaration: tipo declarationM PUNTOYCOMA;
+
+declarationM : ID 
+             | ID COMA declarationM 
+             | init 
+             | init COMA declarationM;
 
 asignation: ID ASIGNACION itop PUNTOYCOMA;
+
+init: ID ASIGNACION itop;
 
 tipo: INT | FLOAT;
