@@ -82,10 +82,24 @@ class MiListener(ParseTreeListener):
     def exitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
         tipo = ctx.getChild(0).getChild(0)
              
-        temp = ctx.getChild(1).getChild(0)
-        print("tipo:" + str(tipo) + " id:" + str(temp))
-        
+        temp = ctx.getChild(1).getChild(0)        
         if temp not in self.tabla.ts[-1]:
             self.tabla.ts[-1][str(temp)] = variable(str(temp), str(tipo))
+
+    def enterAsignation(self, ctx:compiladoresParser.AsignationContext):
+        print("Asignation in:")
+
+    def exitAsignation(self, ctx:compiladoresParser.AsignationContext):
+        print("Asignation out:")
+        
+        name = ctx.getChild(0)
+
+        if self.tabla.findKey(str(name)):
+            self.tabla.ts[-1][str(name).initialized] = True
+        else:
+             print("Error: La variable no esta declarada") 
+
+        
+        
         
         

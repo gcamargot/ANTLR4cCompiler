@@ -45,7 +45,7 @@ OTRO : . ;
 //Verifico que todos los parentesis se abran y se cierren fragment
 //Arbol sintactico descendente
 
-program : instructions EOF || PUNTOYCOMA;
+program : instructions EOF | PUNTOYCOMA;
 
 instructions : instruction instructions
               |
@@ -62,10 +62,10 @@ instruction : doWhileInstruction
             | operation
             ;
 
-doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA PUNTOYCOMA
+doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA
                     ;
 
-whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction 
+whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction
                   ;
 
 ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction
@@ -134,6 +134,6 @@ f : PRODUCTO factor f
 
 declaration: tipo asignation | tipo ID PUNTOYCOMA;
 
-asignation: ID ASIGNACION itop;
+asignation: ID ASIGNACION itop PUNTOYCOMA;
 
 tipo: INT | FLOAT;
