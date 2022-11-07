@@ -132,7 +132,7 @@ f : PRODUCTO factor f
 
 declaration: tipo declarationM PUNTOYCOMA | tipo declaracionF ;
 
-declaracionF: ID PARENTESISABRE parameters PARENTESISCIERRA;
+declaracionF: ID PARENTESISABRE parameters PARENTESISCIERRA instructionBlock;
 
 declarationM : ID 
              | ID COMA declarationM 

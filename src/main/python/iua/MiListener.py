@@ -12,10 +12,10 @@ from tablaValores import *
 class MiListener(ParseTreeListener):
 
     tabla = tablaValores();
-    idList = []
+    idList = dict()
     initList = []
     paramList = dict()
-    struct = 0
+
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
@@ -25,19 +25,27 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#program.
     def exitProgram(self, ctx:compiladoresParser.ProgramContext):
         print ("ProgramContext OUT -> |" + ctx.getText() + "|")
-        self.tabla.del_context();
+        self.tabla.del_context()
 
 
         # Enter a parse tree produced by compiladoresParser#instruction.
     def enterInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionBlock IN -> {" + ctx.getText() + "}")
-        self.tabla.add_context();
+        print ("InstructionBlock IN ")
+        self.tabla.add_context()
+
+        if self.paramList:
+            for temp in self.paramList.keys():
+                if not self.tabla.findKey(temp):
+                    self.tabla.ts[-1][temp] = variable(temp, self.paramList[temp])
+                    
+                else:
+                    print("La variable \"" + temp + "\" ya existe en este contexto")
+        self.paramList.clear()
 
 
     # Exit a parse tree produced by compiladoresParser#Instruction.
-    def exitInstructionBock(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionBlock OUT -> {" + ctx.getText() + "}")
-        print("Tiene " + str(ctx.getChildCount()) + " hijos")
+    def exitInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
+        print ("InstructionBlock OUT ")
         self.tabla.del_context();
 
     def enterDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
@@ -70,29 +78,27 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#term.
     def exitTerm(self, ctx:compiladoresParser.TermContext):
-        print ("Term tiene " + str(ctx.getChildCount()) + " hijos")
-        print ("Term -> text |" + ctx.getText() + "|")
+        pass
     
     # Enter a parse tree produced by compiladoresParser#factor.
     def enterFactor(self, ctx:compiladoresParser.FactorContext):
-        print ("Factor IN -> |" + ctx.getText() + "|")
-
+        pass
     # Exit a parse tree produced by compiladoresParser#factor.
     def exitFactor(self, ctx:compiladoresParser.FactorContext):
-        print ("Factor OUT -> |" + ctx.getText() + "|")
+        pass
 
     def enterDeclaration(self, ctx:compiladoresParser.DeclarationContext):
-        print("Declaracion IN")
+        pass
     
     def exitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
         tipo = str(ctx.getChild(0).getChild(0))
      
-        for temp in self.idList:
+        for temp in self.idList.keys():
             if not self.tabla.findKey(temp):
-                if self.struct == "variable":
+                if self.idList[temp] == "variable":
                     self.tabla.ts[-1][temp] = variable(temp, tipo)
-                if self.struct == "function":
-                    self.tabla.ts[-1][temp] = funcion(temp, tipo, self.paramList)
+                if self.idList[temp] == "function":
+                    self.tabla.ts[0][temp] = funcion(temp, tipo, self.paramList)
             else:
                 print("La variable " + str(temp) + " ya existe.")
         for temp in self.initList:
@@ -101,16 +107,17 @@ class MiListener(ParseTreeListener):
                     if(temp in context):
                         context[temp].initialized = True
 
-        print(self.tabla.ts[-1])
+        
+        if self.tabla.ts[-1]:
+            print(self.tabla.ts[-1])
 
-        self.idList = []
+        self.idList.clear()
         self.initList = []
         self.struct = 0
-        self.paramList = []
 
 
     def enterAsignation(self, ctx:compiladoresParser.AsignationContext):
-        print("Asignation in:")
+        pass
 
     def exitAsignation(self, ctx:compiladoresParser.AsignationContext):
         print("Asignation out:")
@@ -124,14 +131,14 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#init.
     def enterInit(self, ctx:compiladoresParser.InitContext):
-        print("Init in")
+        pass
 
     # Exit a parse tree produced by compiladoresParser#init.
     def exitInit(self, ctx:compiladoresParser.InitContext):
         name = str(ctx.getChild(0))
-        self.idList.append(name)   
+        self.idList[name] = "variable"
         self.initList.append(name)
-        print("Init exit")
+        pass
 
 
       # Enter a parse tree produced by compiladoresParser#declarationM.
@@ -141,9 +148,8 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#declarationM.
     def exitDeclarationM(self, ctx:compiladoresParser.DeclarationMContext):
         name = str(ctx.getChild(0))
-        self.struct = "variable"
         if name[0].isalpha() :
-            self.idList.append(str(name))
+            self.idList[str(name)] = "variable"
 
 
     # Enter a parse tree produced by compiladoresParser#declaracionF.
@@ -153,17 +159,7 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#declaracionF.
     def exitDeclaracionF(self, ctx:compiladoresParser.DeclaracionFContext):
         name = str(ctx.getChild(0))
-        self.struct = "function"
-        self.idList.append(name)
-
-        for temp in self.paramList.keys():
-            if not self.tabla.findKey(temp):
-                self.tabla.ts[-1][temp] = variable(temp, self.paramList[temp])
-            else:
-                print("La variable \"" + temp + "\" ya existe en este contexto")
-
-
-
+        self.idList[name] = "function"
 
     # Enter a parse tree produced by compiladoresParser#parameter.
     def enterParameter(self, ctx:compiladoresParser.ParameterContext):
