@@ -7,7 +7,7 @@ from MiListener import MiListener
 def main(argv):
     # archivo = "/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/input/entrada.txt"
     # archivo = "/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/input/parentesis.txt"
-    archivo = "/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/input/aritmetica.txt"
+    archivo = "/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/input/programa.c"
     if len(argv) > 1 :
         archivo = argv[1]
     input = FileStream(archivo)

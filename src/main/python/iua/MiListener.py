@@ -19,18 +19,16 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
-        print ("ProgramContext IN -> |" + ctx.getText() + "|")
-
+        self.f = open("tablaSimbolos.txt", "w")
 
     # Exit a parse tree produced by compiladoresParser#program.
     def exitProgram(self, ctx:compiladoresParser.ProgramContext):
-        print ("ProgramContext OUT -> |" + ctx.getText() + "|")
+        self.f.close()
         self.tabla.del_context()
 
 
         # Enter a parse tree produced by compiladoresParser#instruction.
     def enterInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionBlock IN ")
         self.tabla.add_context()
 
         if self.paramList:
@@ -45,15 +43,14 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#Instruction.
     def exitInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
-        print ("InstructionBlock OUT ")
+        print(self.tabla.ts[-1])
+    
         self.tabla.del_context();
 
     def enterDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
-        print ("DoWhileInstContext IN -> |" + ctx.getText() + "|")
-
+        pass
     def enterForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
-        print ("Bienvenido al for")
-
+        pass
     def exitForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
         pass
         
@@ -61,24 +58,24 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#WhileInstructionContext.
     def exitDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
-        print ("DoWhileInstContext OUT -> |" + ctx.getText() + "|")
+        pass
         
 
         # Enter a parse tree produced by compiladoresParser#WhileInstruction.
     def enterWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
-        print ("WhileInstContext IN -> |" + ctx.getText() + "|")
+        pass
         
 
 
     # Exit a parse tree produced by compiladoresParser#WhileInstruction.
     def exitWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
-        print ("WhileInstContext OUT -> |" + ctx.getText() + "|")
+        pass
         
 
     def enterIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
-        print("IfInstruction IN -> (" + ctx.getText() + ")")
+        pass
     def exitIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
-        print("IfInstruction OUT -> (" + ctx.getText() + ")")
+        pass
 
     
 
@@ -114,8 +111,7 @@ class MiListener(ParseTreeListener):
                         context[temp].initialized = True
 
         
-        if self.tabla.ts[-1]:
-            print(self.tabla.ts[-1])
+            
 
         self.idList.clear()
         self.initList = []
@@ -126,7 +122,6 @@ class MiListener(ParseTreeListener):
         pass
 
     def exitAsignation(self, ctx:compiladoresParser.AsignationContext):
-        print("Asignation out:")
         
         name = ctx.getChild(0)
 
@@ -144,7 +139,6 @@ class MiListener(ParseTreeListener):
         name = str(ctx.getChild(0))
         self.idList[name] = "variable"
         self.initList.append(name)
-        pass
 
 
       # Enter a parse tree produced by compiladoresParser#declarationM.

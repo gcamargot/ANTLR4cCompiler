@@ -29,6 +29,7 @@ NOT : '!';
 AND : '&&';
 OR : '||';
 IF : 'if';
+ELSE : 'else';
 FOR : 'for';
 WHILE : 'while';
 DO : 'do';
@@ -64,8 +65,11 @@ instruction : doWhileInstruction
             | comparison
             | operation
             | instructionBlock
+            | returnInstruction
             
             ;
+
+returnInstruction: RETURN operation;
 
 doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA
                     ;
@@ -73,8 +77,14 @@ doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENT
 whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction
                   ;
 
-ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction
+ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction elseInstruction
+                
                 ;
+
+elseInstruction : ELSE instruction 
+                  |  
+                  ;
+
 
 forInstruction : FOR PARENTESISABRE instruction instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
                 ;
@@ -116,7 +126,7 @@ land :  AND land logicAnd
         |
         ;
 
-term : f factor ;
+term : factor f ;
 
 t : MAS term t
    | MENOS term t
@@ -143,7 +153,13 @@ declarationM : ID
              | init 
              | init COMA declarationM;
 
-asignation: ID ASIGNACION itop PUNTOYCOMA;
+asignation: ID ASIGNACION itop PUNTOYCOMA
+            | ID ASIGNACION ID PARENTESISABRE parametrosF PARENTESISCIERRA PUNTOYCOMA;
+
+parametrosF: ID COMA parametrosF
+            | NUMERO COMA parametrosF
+            | ID | NUMERO
+            ;
 
 parameter: tipo ID ;
 
