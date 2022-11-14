@@ -50,6 +50,12 @@ class MiListener(ParseTreeListener):
 
     def enterDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
         print ("DoWhileInstContext IN -> |" + ctx.getText() + "|")
+
+    def enterForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
+        print ("Bienvenido al for")
+
+    def exitForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
+        pass
         
 
 

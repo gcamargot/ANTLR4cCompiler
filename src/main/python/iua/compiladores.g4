@@ -12,7 +12,9 @@ CORCHETECIERRA : ']';
 PARENTESISCIERRA : ')';
 PARENTESISABRE : '(';
 MAS: '+';
+SUMARUNO: '++';
 MENOS: '-';
+RESTARUNO: '--';
 PRODUCTO: '*';
 DIVISION: '/';
 MODULO : '%';
@@ -74,7 +76,7 @@ whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction
 ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction
                 ;
 
-forInstruction : FOR PARENTESISABRE instruction PUNTOYCOMA instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
+forInstruction : FOR PARENTESISABRE instruction instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
                 ;
 instructionBlock : LLAVEABRE instructions LLAVECIERRA;
 
@@ -96,7 +98,9 @@ itop :  operation itop
         |
         ;
 
-operation : expression ;
+operation : expression 
+            | incremento
+            | decremento;
 
 expression : lor logicOr ;
 
@@ -151,3 +155,6 @@ init: ID ASIGNACION itop;
 
 tipo: INT | FLOAT;
 
+incremento: ID SUMARUNO;
+
+decremento: ID RESTARUNO;
