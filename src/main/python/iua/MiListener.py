@@ -15,14 +15,26 @@ class MiListener(ParseTreeListener):
     idList = dict()
     initList = []
     paramList = dict()
+    contador = 0
 
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
-        self.f = open("tablaSimbolos.txt", "w")
+        self.f = open("/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/output/tablaSimbolos.txt", "w")
 
     # Exit a parse tree produced by compiladoresParser#program.
     def exitProgram(self, ctx:compiladoresParser.ProgramContext):
+        if(self.contador >= 0):
+            self.f.write("Contexto: ")
+            self.f.write(str(self.contador))
+            self.f.write("\n")
+            for each in self.tabla.ts[-1]:
+                self.f.write(str(self.tabla.ts[-1][each].getType()) + " ")
+                self.f.write(str(each))
+                self.f.write("("+ self.tabla.ts[-1][each].getKind() + "), ")
+                
+            self.f.write("\n")
+            self.f.write("\n")
         self.f.close()
         self.tabla.del_context()
 
@@ -30,6 +42,7 @@ class MiListener(ParseTreeListener):
         # Enter a parse tree produced by compiladoresParser#instruction.
     def enterInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
         self.tabla.add_context()
+        self.contador+=1
 
         if self.paramList:
             for temp in self.paramList.keys():
@@ -43,9 +56,26 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#Instruction.
     def exitInstructionBlock(self, ctx:compiladoresParser.InstructionContext):
-        print(self.tabla.ts[-1])
+        if(self.tabla.ts[-1]):
+            self.f.write("Contexto: ")
+            self.f.write(str(self.contador))
+            self.f.write("\n")
+            for each in self.tabla.ts[-1]:
+                self.f.write(str(self.tabla.ts[-1][each].getType()) + " ")
+                self.f.write(str(each))
+                self.f.write("("+ self.tabla.ts[-1][each].getKind() + "), ")
+                
+            self.f.write("\n")
+        else:
+            self.f.write("Contexto: ")
+            self.f.write(str(self.contador))
+            self.f.write("\n")
+            self.f.write("Vacio")
+            self.f.write("\n")
+        self.contador-=1
     
-        self.tabla.del_context();
+        self.tabla.del_context()
+        
 
     def enterDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
         pass
@@ -54,30 +84,22 @@ class MiListener(ParseTreeListener):
     def exitForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
         pass
         
-
-
     # Exit a parse tree produced by compiladoresParser#WhileInstructionContext.
     def exitDoWhileInstruction(self, ctx:compiladoresParser.DoWhileInstructionContext):
         pass
         
-
         # Enter a parse tree produced by compiladoresParser#WhileInstruction.
     def enterWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
         pass
         
-
-
     # Exit a parse tree produced by compiladoresParser#WhileInstruction.
     def exitWhileInstruction(self, ctx:compiladoresParser.WhileInstructionContext):
         pass
         
-
     def enterIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
         pass
     def exitIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
         pass
-
-    
 
     # Enter a parse tree produced by compiladoresParser#term.
     def exitTerm(self, ctx:compiladoresParser.TermContext):
@@ -102,13 +124,17 @@ class MiListener(ParseTreeListener):
                     self.tabla.ts[-1][temp] = variable(temp, tipo)
                 if self.idList[temp] == "function":
                     self.tabla.ts[0][temp] = funcion(temp, tipo, self.paramList)
+                
             else:
                 print("La variable " + str(temp) + " ya existe.")
+        
         for temp in self.initList:
             if self.tabla.findKey(temp):
+
                 for context in self.tabla.ts:
                     if(temp in context):
-                        context[temp].initialized = True
+                        if(not context[temp].initialized):
+                            context[temp].initialized = True
 
         
             
@@ -126,7 +152,7 @@ class MiListener(ParseTreeListener):
         name = ctx.getChild(0)
 
         if self.tabla.findKey(str(name)):
-            self.tabla.ts[-1][str(name)].initialized = True
+            self.initList.append(str(name))
         else:
             print("Error: La variable \"" + str(name) + "\" no esta declarada") 
 
@@ -171,4 +197,6 @@ class MiListener(ParseTreeListener):
         type = str(ctx.getChild(0).getChild(0))
         if not self.tabla.findKey(name):
             self.paramList[name] = type  
+
+    
         

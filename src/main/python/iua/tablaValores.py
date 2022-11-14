@@ -33,9 +33,12 @@ class id:
         self.type = type
         self.initialized = False
         self.used = False
+        self.kind = "variable"
 
-    def getName(self):
-        return self.name
+    def getType(self):
+        return self.type
+    def getKind(self):
+        return self.kind
 
 class variable(id):
     pass
@@ -44,3 +47,5 @@ class funcion(id):
     def __init__(self, name, type, parameters):
         super().__init__(name, type)
         self.parameters = parameters
+        self.kind = "function"
+    
