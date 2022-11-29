@@ -20,7 +20,7 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
-        self.f = open("/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/output/tablaSimbolos.txt", "w")
+        self.f = open("tablaSimbolos.txt", "w")
 
     # Exit a parse tree produced by compiladoresParser#program.
     def exitProgram(self, ctx:compiladoresParser.ProgramContext):

@@ -7,11 +7,20 @@ else:
 
 # This class defines a complete generic visitor for a parse tree produced by compiladoresParser.
 
-class compiladoresVisitor(ParseTreeVisitor):
+class MiVisitor(ParseTreeVisitor):
+
+    contador = 0
+    returnUp = False
+
 
     # Visit a parse tree produced by compiladoresParser#program.
     def visitProgram(self, ctx:compiladoresParser.ProgramContext):
-        return self.visitChildren(ctx)
+        self.f = open("CodigoIntermedio.txt", "w")
+        self.f.write("jump main \n")
+        
+        self.visitChildren(ctx)
+        self.f.close()
+
 
 
     # Visit a parse tree produced by compiladoresParser#instructions.
@@ -36,7 +45,19 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#ifInstruction.
     def visitIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
+        comparison = str(ctx.getChild(2).getChild(1).getChild(0))
+        self.f.write("if " + ctx.getChild(2).getText() + " jump endElse" + str(self.contador) + "\n")
         return self.visitChildren(ctx)
+
+    def visitInstructionIf(self, ctx:compiladoresParser.InstructionIfContext):
+        
+        return self.visitChildren(ctx)
+
+    def visitElseInstruction(self, ctx:compiladoresParser.ElseInstructionContext):
+        self.f.write("Label endElse" + str(self.contador)+ "\n")
+
+        self.visitChildren(ctx)
+        self.contador = self.contador + 1
 
 
     # Visit a parse tree produced by compiladoresParser#forInstruction.
@@ -108,7 +129,6 @@ class compiladoresVisitor(ParseTreeVisitor):
     def visitFactor(self, ctx:compiladoresParser.FactorContext):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by compiladoresParser#f.
     def visitF(self, ctx:compiladoresParser.FContext):
         return self.visitChildren(ctx)
@@ -121,6 +141,7 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#declaracionF.
     def visitDeclaracionF(self, ctx:compiladoresParser.DeclaracionFContext):
+        self.f.write("Label " + str(ctx.getChild(0)) + "\n")
         return self.visitChildren(ctx)
 
 
@@ -131,11 +152,13 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#asignation.
     def visitAsignation(self, ctx:compiladoresParser.AsignationContext):
-        return self.visitChildren(ctx)
+        self.f.write(str(ctx.getChild(0)) + "=" + ctx.getChild(2).getText() + "\n")
 
 
     # Visit a parse tree produced by compiladoresParser#parameter.
     def visitParameter(self, ctx:compiladoresParser.ParameterContext):
+        self.f.write("pop " + str(ctx.getChild(1)) + "\n")
+        
         return self.visitChildren(ctx)
 
 
@@ -146,6 +169,7 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#init.
     def visitInit(self, ctx:compiladoresParser.InitContext):
+        self.f.write(str(ctx.getChild(0)) + "= " + ctx.getChild(2).getText() + "\n")
         return self.visitChildren(ctx)
 
 
@@ -153,6 +177,20 @@ class compiladoresVisitor(ParseTreeVisitor):
     def visitTipo(self, ctx:compiladoresParser.TipoContext):
         return self.visitChildren(ctx)
 
+    def visitAsignationF(self, ctx:compiladoresParser.AsignationFContext):
+        self.visitChildren(ctx)
+        
+        self.f.write("jump " + str(ctx.getChild(2))+ "\n")
+        self.f.write("label back" + str(self.contador)+ "\n")
+        self.f.write("pop " + str(ctx.getChild(0))+ "\n")
+        
+    
+    def visitParametrosF(self, ctx:compiladoresParser.ParametrosFContext):
+        self.f.write("push " + str(ctx.getChild(0))+ "\n")
+        return self.visitChildren(ctx)
 
+    def visitReturnInstruction(self, ctx:compiladoresParser.ReturnInstructionContext):
+        self.f.write("push " + ctx.getChild(1).getChild(0).getText() + "\n")
+        self.f.write("jump back" + str(self.contador) + "\n")
 
 del compiladoresParser

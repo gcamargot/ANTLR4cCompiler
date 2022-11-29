@@ -3,6 +3,7 @@ from antlr4 import *
 from compiladoresLexer  import compiladoresLexer
 from compiladoresParser import compiladoresParser
 from MiListener import MiListener
+from MiVisitor import MiVisitor
 
 def main(argv):
     # archivo = "/home/gaston/Desktop/2022/2do cuatrimestre/DHS/DHS2022/input/entrada.txt"
@@ -15,8 +16,10 @@ def main(argv):
     stream = CommonTokenStream(lexer)
     parser = compiladoresParser(stream)
     miListener = MiListener()
+    miVisitor = MiVisitor()
     parser.addParseListener(miListener)
     tree = parser.program()
+    miVisitor.visitProgram(tree)
     #print(tree.toStringTree(recog=parser))
 
 if __name__ == '__main__':

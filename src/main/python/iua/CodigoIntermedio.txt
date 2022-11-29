@@ -1,0 +1,28 @@
+jump main 
+Label sumar
+pop a
+pop b
+r= a+b
+push r
+jump back0
+Label main
+x= 5
+a= 1
+b= 2
+c= 3
+m= 1
+n= 0
+push x
+push 10
+jump sumar
+label back0
+pop y
+a= 5
+b= a+x
+if y==14 jump endElse0
+x=2*x+2
+y=x+2
+Label endElse0
+y=2
+push 0
+jump back1

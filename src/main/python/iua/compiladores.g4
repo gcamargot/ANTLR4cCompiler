@@ -35,12 +35,13 @@ WHILE : 'while';
 DO : 'do';
 INT : 'int';
 FLOAT : 'float';
+RETURN: 'return';
 FLOTANTES : DIGITO PUNTO DIGITO;
 FLOTANTESNEGATIVOS : '-' DIGITO PUNTO DIGITO;
 HEXADECIMALES : '0''x' ([a-f]|[A-Z]|DIGITO)+;
 NUMERO : DIGITO+ ;
 ID : (LETRA | '_')(LETRA | DIGITO | '_')* ;
-RETURN: 'return';
+
 
 WS : [ \t\n\r] -> skip;
 OTRO : . ;
@@ -53,23 +54,26 @@ program : instructions EOF | PUNTOYCOMA;
 
 instructions : instruction instructions
               | instruction PUNTOYCOMA
+              | returnInstruction
               | 
               ;
 
 instruction : doWhileInstruction
+            
             | whileInstruction
             | ifInstruction
             | forInstruction
             | declaration
             | asignation
+            | asignationF
             | comparison
             | operation
             | instructionBlock
-            | returnInstruction
+            
             
             ;
 
-returnInstruction: RETURN operation;
+returnInstruction: RETURN instructions;
 
 doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENTESISCIERRA
                     ;
@@ -77,9 +81,11 @@ doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENT
 whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction
                   ;
 
-ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instruction elseInstruction
+ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instructionIf elseInstruction
                 
                 ;
+
+instructionIf : instruction;
 
 elseInstruction : ELSE instruction 
                   |  
@@ -153,8 +159,8 @@ declarationM : ID
              | init 
              | init COMA declarationM;
 
-asignation: ID ASIGNACION itop PUNTOYCOMA
-            | ID ASIGNACION ID PARENTESISABRE parametrosF PARENTESISCIERRA PUNTOYCOMA;
+asignation: ID ASIGNACION itop PUNTOYCOMA;
+asignationF: ID ASIGNACION ID PARENTESISABRE parametrosF PARENTESISCIERRA PUNTOYCOMA;
 
 parametrosF: ID COMA parametrosF
             | NUMERO COMA parametrosF
