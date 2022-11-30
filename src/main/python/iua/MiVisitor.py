@@ -10,7 +10,7 @@ else:
 class MiVisitor(ParseTreeVisitor):
 
     contador = 0
-    returnUp = False
+    lastLabel = [0]
 
 
     # Visit a parse tree produced by compiladoresParser#program.
@@ -19,6 +19,8 @@ class MiVisitor(ParseTreeVisitor):
         self.f.write("jump main \n")
         
         self.visitChildren(ctx)
+
+        self.f.write("label back" + str(self.contador))
         self.f.close()
 
 
@@ -45,19 +47,24 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#ifInstruction.
     def visitIfInstruction(self, ctx:compiladoresParser.IfInstructionContext):
-        comparison = str(ctx.getChild(2).getChild(1).getChild(0))
-        self.f.write("if " + ctx.getChild(2).getText() + " jump endElse" + str(self.contador) + "\n")
-        return self.visitChildren(ctx)
-
-    def visitInstructionIf(self, ctx:compiladoresParser.InstructionIfContext):
         
-        return self.visitChildren(ctx)
+        self.contador = self.contador + 1
+        self.lastLabel.append(self.contador)
+        print(str(self.lastLabel))
+        self.f.write("ifnot " + ctx.getChild(2).getText() + " jump else" + str(self.contador) + "\n")
+        self.visitChildren(ctx.getChild(4))
+        self.f.write("jump endif" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("label else" + str(self.lastLabel[-1]) + "\n")
+        if(ctx.getChild(5)):
+            self.visitChildren(ctx.getChild(5))
+        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
+        self.lastLabel.pop()
+
+    
 
     def visitElseInstruction(self, ctx:compiladoresParser.ElseInstructionContext):
-        self.f.write("Label endElse" + str(self.contador)+ "\n")
-
         self.visitChildren(ctx)
-        self.contador = self.contador + 1
+        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
 
 
     # Visit a parse tree produced by compiladoresParser#forInstruction.
@@ -153,6 +160,7 @@ class MiVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by compiladoresParser#asignation.
     def visitAsignation(self, ctx:compiladoresParser.AsignationContext):
         self.f.write(str(ctx.getChild(0)) + "=" + ctx.getChild(2).getText() + "\n")
+        return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by compiladoresParser#parameter.
@@ -179,9 +187,14 @@ class MiVisitor(ParseTreeVisitor):
 
     def visitAsignationF(self, ctx:compiladoresParser.AsignationFContext):
         self.visitChildren(ctx)
+        label = str(0)
+        if(self.lastLabel):
+            label = str(self.lastLabel[-1])
+            self.lastLabel.pop()
+        
         
         self.f.write("jump " + str(ctx.getChild(2))+ "\n")
-        self.f.write("label back" + str(self.contador)+ "\n")
+        self.f.write("label back" + label + "\n")
         self.f.write("pop " + str(ctx.getChild(0))+ "\n")
         
     

@@ -2,6 +2,10 @@ Contexto: 1
 int a(variable), int b(variable), int r(variable), 
 Contexto: 2
 Vacio
+Contexto: 3
+Vacio
+Contexto: 2
+Vacio
 Contexto: 2
 Vacio
 Contexto: 1

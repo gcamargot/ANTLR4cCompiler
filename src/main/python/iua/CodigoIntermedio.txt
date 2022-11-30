@@ -19,10 +19,18 @@ label back0
 pop y
 a= 5
 b= a+x
-if y==14 jump endElse0
+ifnot y==14 jump else1
+ifnot y==14 jump else2
 x=2*x+2
 y=x+2
-Label endElse0
+jump endif2
+label else2
+label endif2
+a=b
+jump endif1
+label else1
 y=2
+label endif1
 push 0
-jump back1
+jump back2
+label back2

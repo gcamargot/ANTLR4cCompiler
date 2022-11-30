@@ -59,7 +59,6 @@ instructions : instruction instructions
               ;
 
 instruction : doWhileInstruction
-            
             | whileInstruction
             | ifInstruction
             | forInstruction
@@ -81,14 +80,13 @@ doWhileInstruction : DO instructionBlock WHILE PARENTESISABRE instruction PARENT
 whileInstruction : WHILE PARENTESISABRE instruction PARENTESISCIERRA instruction
                   ;
 
-ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instructionIf elseInstruction
-                
+ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instructionBlock elseInstruction
+                | IF PARENTESISABRE comparison PARENTESISCIERRA instructionBlock 
                 ;
 
-instructionIf : instruction;
 
-elseInstruction : ELSE instruction 
-                  |  
+elseInstruction : ELSE instructionBlock 
+                   
                   ;
 
 
