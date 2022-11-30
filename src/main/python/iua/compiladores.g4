@@ -116,7 +116,7 @@ operation : expression
             | incremento
             | decremento;
 
-expression : lor logicOr ;
+expression :  term t|lor logicOr ;
 
 logicOr : land logicAnd;
 

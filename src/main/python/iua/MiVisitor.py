@@ -11,6 +11,8 @@ class MiVisitor(ParseTreeVisitor):
 
     contador = 0
     lastLabel = [0]
+    temporal = 0
+    rollback = False
 
 
     # Visit a parse tree produced by compiladoresParser#program.
@@ -76,7 +78,6 @@ class MiVisitor(ParseTreeVisitor):
     def visitInstructionBlock(self, ctx:compiladoresParser.InstructionBlockContext):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by compiladoresParser#comparison.
     def visitComparison(self, ctx:compiladoresParser.ComparisonContext):
         return self.visitChildren(ctx)
@@ -99,7 +100,14 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#expression.
     def visitExpression(self, ctx:compiladoresParser.ExpressionContext):
+        self.visitChildren(ctx)
+        if(ctx.getChildCount()):
+            self.f.write("t" + str(self.temporal) + "=" + ctx.getChild(0).getText() + "\n")
+        self.rollback = True
+        
+        self.temporal = 0
         return self.visitChildren(ctx)
+        
 
 
     # Visit a parse tree produced by compiladoresParser#logicOr.
@@ -119,6 +127,8 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#land.
     def visitLand(self, ctx:compiladoresParser.LandContext):
+        if(ctx.getChildCount()):
+            print(ctx.getChild(0).getText())
         return self.visitChildren(ctx)
 
 
@@ -126,10 +136,18 @@ class MiVisitor(ParseTreeVisitor):
     def visitTerm(self, ctx:compiladoresParser.TermContext):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by compiladoresParser#t.
     def visitT(self, ctx:compiladoresParser.TContext):
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        if(ctx.getChildCount() and not self.rollback):
+            self.f.write("t" + str(self.temporal) + "=" + ctx.getChild(1).getText() + "\n")
+            self.temporal = self.temporal + 1
+        if(self.rollback):
+            if(ctx.getChildCount()):
+                self.f.write("t" + str(self.temporal+1) + "=" + "t" + str(self.temporal+1))
+                self.f.write(ctx.getChild(0).getText() + "t" + str(self.temporal) + "\n")
+                self.temporal = self.temporal +1
+        
 
 
     # Visit a parse tree produced by compiladoresParser#factor.
@@ -138,8 +156,7 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#f.
     def visitF(self, ctx:compiladoresParser.FContext):
-        return self.visitChildren(ctx)
-
+        return self.visitChildren(ctx)        
 
     # Visit a parse tree produced by compiladoresParser#declaration.
     def visitDeclaration(self, ctx:compiladoresParser.DeclarationContext):
@@ -159,8 +176,10 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#asignation.
     def visitAsignation(self, ctx:compiladoresParser.AsignationContext):
-        self.f.write(str(ctx.getChild(0)) + "=" + ctx.getChild(2).getText() + "\n")
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        self.f.write(str(ctx.getChild(0)) + "= t" + str(self.temporal) + "\n")
+        self.temporal = 0
+        
 
 
     # Visit a parse tree produced by compiladoresParser#parameter.
@@ -175,10 +194,13 @@ class MiVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#init.
+    # Visit a parse tree produced by compiladoresParser#.
     def visitInit(self, ctx:compiladoresParser.InitContext):
-        self.f.write(str(ctx.getChild(0)) + "= " + ctx.getChild(2).getText() + "\n")
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        self.f.write(ctx.getChild(0).getText() + ctx.getChild(1).getText() + "t" + str(self.temporal) +  "\n")
+        self.rollback = False
+        self.temporal = 0
+        
 
 
     # Visit a parse tree produced by compiladoresParser#tipo.
