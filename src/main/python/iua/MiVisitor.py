@@ -52,7 +52,7 @@ class MiVisitor(ParseTreeVisitor):
         
         self.contador = self.contador + 1
         self.lastLabel.append(self.contador)
-        print(str(self.lastLabel))
+        
         self.f.write("ifnot " + ctx.getChild(2).getText() + " jump else" + str(self.contador) + "\n")
         self.visitChildren(ctx.getChild(4))
         self.f.write("jump endif" + str(self.lastLabel[-1]) + "\n")
@@ -104,7 +104,6 @@ class MiVisitor(ParseTreeVisitor):
         if(ctx.getChildCount()):
             self.f.write("t" + str(self.temporal) + "=" + ctx.getChild(0).getText() + "\n")
         self.rollback = True
-        
         self.temporal = 0
         return self.visitChildren(ctx)
         
@@ -127,8 +126,7 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#land.
     def visitLand(self, ctx:compiladoresParser.LandContext):
-        if(ctx.getChildCount()):
-            print(ctx.getChild(0).getText())
+        
         return self.visitChildren(ctx)
 
 
