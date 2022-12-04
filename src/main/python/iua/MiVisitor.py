@@ -11,6 +11,7 @@ class MiVisitor(ParseTreeVisitor):
 
     contador = 0
     lastLabel = [0]
+    currentLoop = [0]
     temporal = 0
     rollback = False
 
@@ -71,7 +72,14 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#forInstruction.
     def visitForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
-        return self.visitChildren(ctx)
+        self.currentLoop.append(self.contador)
+        self.f.write(ctx.getChild(2).getChild(1).getText() + "\n")
+        self.f.write("label loop" + str(self.currentLoop[-1]) + "\n")
+        self.visitChildren(ctx.getChild(7))
+        self.f.write(ctx.getChild(5).getText() + "\n")
+        self.f.write("ifnot " + ctx.getChild(3).getText() + " jump loop" + str(self.currentLoop[-1]) + "\n")
+        self.currentLoop.pop()
+        
 
 
     # Visit a parse tree produced by compiladoresParser#instructionBlock.

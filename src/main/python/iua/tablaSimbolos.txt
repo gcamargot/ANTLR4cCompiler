@@ -1,15 +1,9 @@
 Contexto: 1
 int a(variable), int b(variable), int r(variable), 
 Contexto: 2
-Vacio
-Contexto: 3
-Vacio
-Contexto: 2
-Vacio
-Contexto: 2
-Vacio
+int a(variable), int b(variable), 
 Contexto: 1
-int y(variable), int x(variable), int t(variable), int r(variable), int q(variable), int p(variable), int a(variable), int b(variable), int c(variable), int m(variable), int n(variable), int o(variable), int l(variable), 
+int i(variable), 
 Contexto: 0
 int sumar(function), int main(function), 
 

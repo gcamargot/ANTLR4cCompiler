@@ -90,7 +90,7 @@ elseInstruction : ELSE instructionBlock
                   ;
 
 
-forInstruction : FOR PARENTESISABRE instruction instruction PUNTOYCOMA instruction PARENTESISCIERRA instructionBlock
+forInstruction : FOR PARENTESISABRE  declaration  comparison PUNTOYCOMA   operation PARENTESISCIERRA instructionBlock
                 ;
 instructionBlock : LLAVEABRE instructions LLAVECIERRA;
 
@@ -100,11 +100,10 @@ comparison :  ID compare ID
             | NUMERO compare ID
             ;
 
-compare :   MENOR
-              | MAYOR
-              | IGUAL
-              | DISTINTO
-              ;
+compare :MENOR
+        | MAYOR
+        | IGUAL
+        | DISTINTO;
 
 //2+2&&4*0
 

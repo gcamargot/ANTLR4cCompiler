@@ -9,49 +9,16 @@ r=t1
 push r
 jump back0
 Label main
-t0=-5
-x=t0
-t0=1
-a=t0
-t0=2
-b=t0
-t0=3
-c=t0
-t0=1
-m=t0
-t0=0
-n=t0
-push x
-push 10
-jump sumar
-label back0
-pop y
+i=0
+label loop0
 t0=-5
 a=t0
 t0=x
 t1=a
 t1=t1+t0
 b=t1
-ifnot y==14 jump else1
-ifnot y==14 jump else2
-t0=2
-t1=2*x
-t1=t1+t0
-x= t1
-t1=t1+t0
-t1=x
-t1=t1+t0
-y= t1
-jump endif2
-label else2
-label endif2
-t0=b
-a= t0
-jump endif1
-label else1
-t0=2
-y= t0
-label endif1
+i++
+ifnot i<5 jump loop0
 push 0
-jump back2
-label back2
+jump back0
+label back0
