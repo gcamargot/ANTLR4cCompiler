@@ -11,3 +11,6 @@ El objetivo de este proyecto es desarrollar un compilador de C utilizando Python
 - Utiliza Python como lenguaje principal para el desarrollo del compilador.
 - Utiliza la libreria ANTLR4 para la implementacion de analizadores sintacticos y semanticos.
 - Capaz de analizar y compilar programas escritos en C de manera eficiente y traducirlo a codigo de 3 direcciones (3AC)
+
+
+Para utilizar este proyecto es necesario tener instalado Python en su versión 3.8 o superior, y la librería ANTLR4 en su versión 4.8 o superior.
