@@ -10,6 +10,7 @@ else:
 class MiVisitor(ParseTreeVisitor):
 
     contador = 0
+    functions = dict()
     lastLabel = [0]
     currentLoop = [0]
     temporal = 0
@@ -19,11 +20,13 @@ class MiVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by compiladoresParser#program.
     def visitProgram(self, ctx:compiladoresParser.ProgramContext):
         self.f = open("./output/CodigoIntermedio.txt", "w")
+        self.f.write("push EOF\n")
         self.f.write("jump main \n")
+        
         
         self.visitChildren(ctx)
 
-        self.f.write("label back" + str(self.contador))
+        
         self.f.close()
 
 
@@ -221,9 +224,9 @@ class MiVisitor(ParseTreeVisitor):
             label = str(self.lastLabel[-1])
             self.lastLabel.pop()
         
-        
+        self.f.write("push back" + label + "\n")
         self.f.write("jump " + str(ctx.getChild(2))+ "\n")
-        self.f.write("label back" + label + "\n")
+
         self.f.write("pop " + str(ctx.getChild(0))+ "\n")
         
     
@@ -232,7 +235,10 @@ class MiVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
     def visitReturnInstruction(self, ctx:compiladoresParser.ReturnInstructionContext):
+        self.f.write("pop return" + str(self.contador)  + "\n")
         self.f.write("push " + ctx.getChild(1).getChild(0).getText() + "\n")
-        self.f.write("jump back" + str(self.contador) + "\n")
+        
+        self.f.write("jump return" + str(self.contador) + "\n")
+        self.contador = self.contador - 1
 
 del compiladoresParser

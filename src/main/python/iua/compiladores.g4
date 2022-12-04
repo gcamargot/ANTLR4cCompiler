@@ -67,6 +67,7 @@ instruction : doWhileInstruction
             | asignationF
             | comparison
             | operation
+            | llamadoFuncion
             | instructionBlock
             
             
@@ -155,6 +156,8 @@ declarationM : ID
              | ID COMA declarationM 
              | init 
              | init COMA declarationM;
+
+llamadoFuncion : ID PARENTESISABRE parametrosF PARENTESISCIERRA PUNTOYCOMA;
 
 asignation: ID ASIGNACION itop PUNTOYCOMA;
 asignationF: ID ASIGNACION ID PARENTESISABRE parametrosF PARENTESISCIERRA PUNTOYCOMA;
