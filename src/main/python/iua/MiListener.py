@@ -20,7 +20,7 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#program.
     def enterProgram(self, ctx:compiladoresParser.ProgramContext):
-        self.f = open("tablaSimbolos.txt", "w")
+        self.f = open("./output/tablaSimbolos.txt", "w")
 
     # Exit a parse tree produced by compiladoresParser#program.
     def exitProgram(self, ctx:compiladoresParser.ProgramContext):
@@ -126,7 +126,7 @@ class MiListener(ParseTreeListener):
                     self.tabla.ts[0][temp] = funcion(temp, tipo, self.paramList)
                 
             else:
-                print("La variable " + str(temp) + " ya existe.")
+                print("WARNING: La variable " + str(temp) + " ya existe.")
         
         for temp in self.initList:
             if self.tabla.findKey(temp):
@@ -154,7 +154,7 @@ class MiListener(ParseTreeListener):
         if self.tabla.findKey(str(name)):
             self.initList.append(str(name))
         else:
-            print("Error: La variable \"" + str(name) + "\" no esta declarada") 
+            print("ERROR: La variable \"" + str(name) + "\" no esta declarada") 
 
     # Enter a parse tree produced by compiladoresParser#init.
     def enterInit(self, ctx:compiladoresParser.InitContext):

@@ -2,8 +2,14 @@ Contexto: 1
 int a(variable), int b(variable), int r(variable), 
 Contexto: 2
 int a(variable), int b(variable), 
+Contexto: 3
+Vacio
+Contexto: 2
+Vacio
+Contexto: 2
+Vacio
 Contexto: 1
-int i(variable), 
+Vacio
 Contexto: 0
 int sumar(function), int main(function), 
 

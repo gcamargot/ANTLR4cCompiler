@@ -18,7 +18,7 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#program.
     def visitProgram(self, ctx:compiladoresParser.ProgramContext):
-        self.f = open("CodigoIntermedio.txt", "w")
+        self.f = open("./output/CodigoIntermedio.txt", "w")
         self.f.write("jump main \n")
         
         self.visitChildren(ctx)
@@ -72,6 +72,7 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#forInstruction.
     def visitForInstruction(self, ctx:compiladoresParser.ForInstructionContext):
+        self.contador = self.contador+1
         self.currentLoop.append(self.contador)
         self.f.write(ctx.getChild(2).getChild(1).getText() + "\n")
         self.f.write("label loop" + str(self.currentLoop[-1]) + "\n")
