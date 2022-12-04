@@ -218,13 +218,14 @@ class MiVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
     def visitAsignationF(self, ctx:compiladoresParser.AsignationFContext):
+        self.f.write("push PC\n")
         self.visitChildren(ctx)
         label = str(0)
         if(self.lastLabel):
             label = str(self.lastLabel[-1])
             self.lastLabel.pop()
         
-        self.f.write("push back" + label + "\n")
+        
         self.f.write("jump " + str(ctx.getChild(2))+ "\n")
 
         self.f.write("pop " + str(ctx.getChild(0))+ "\n")

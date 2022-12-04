@@ -13,9 +13,9 @@ t0=1
 m=t0
 t0=0
 n=t0
+push PC
 push x
 push 10
-push back0
 jump sumar
 pop y
 t0=5
