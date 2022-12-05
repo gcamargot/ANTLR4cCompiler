@@ -50,7 +50,7 @@ class MiListener(ParseTreeListener):
                     self.tabla.ts[-1][temp] = variable(temp, self.paramList[temp])
                     
                 else:
-                    print("La variable \"" + temp + "\" ya existe en este contexto")
+                    print("ERROR: La variable \"" + temp + "\" ya existe en este contexto")
         self.paramList.clear()
 
 
@@ -126,7 +126,7 @@ class MiListener(ParseTreeListener):
                     self.tabla.ts[0][temp] = funcion(temp, tipo, self.paramList)
                 
             else:
-                print("WARNING: La variable " + str(temp) + " ya existe.")
+                print("ERROR: La variable " + str(temp) + " ya existe.")
         
         for temp in self.initList:
             if self.tabla.findKey(temp):
@@ -155,6 +155,14 @@ class MiListener(ParseTreeListener):
             self.initList.append(str(name))
         else:
             print("ERROR: La variable \"" + str(name) + "\" no esta declarada") 
+
+
+    def enterAsignationF(self, ctx:compiladoresParser.AsignationFContext):
+        pass
+    def exitAsignationF(self, ctx:compiladoresParser.AsignationFContext):
+        key = ctx.getChild(2).getText()
+        if not self.tabla.findKey(key):
+            print("ERROR: La funcion " + key + " no esta declarada o no existe en este contexto")
 
     # Enter a parse tree produced by compiladoresParser#init.
     def enterInit(self, ctx:compiladoresParser.InitContext):

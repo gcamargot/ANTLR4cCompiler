@@ -1,3 +1,7 @@
+int sumar (int a, int b) {
+    int r = a + b;
+    return r;
+}
 int main () {
     int y;
     int x = 5;
@@ -14,18 +18,15 @@ int main () {
 
     if (y == 14) {
         x = 2 * x;
-        y = x + 2;
+        
     }
-    else {
+    else 
         y = -2;
-    }
+    
     return 0;
 }
 
 
-int sumar (int a, int b) {
-    int r = a + b;
-    return r;
-}
+
 
 

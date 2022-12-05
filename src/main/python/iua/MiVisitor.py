@@ -162,6 +162,8 @@ class MiVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#factor.
     def visitFactor(self, ctx:compiladoresParser.FactorContext):
+        #self.f.write("t" + str(self.temporal) + "=" + ctx.getChild(0).getText() + "\n")
+        #self.temporal = self.temporal +1
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by compiladoresParser#f.
@@ -220,9 +222,7 @@ class MiVisitor(ParseTreeVisitor):
     def visitAsignationF(self, ctx:compiladoresParser.AsignationFContext):
         self.f.write("push PC\n")
         self.visitChildren(ctx)
-        label = str(0)
         if(self.lastLabel):
-            label = str(self.lastLabel[-1])
             self.lastLabel.pop()
         
         

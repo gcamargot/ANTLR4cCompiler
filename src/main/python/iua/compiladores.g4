@@ -86,9 +86,7 @@ ifInstruction : IF PARENTESISABRE comparison PARENTESISCIERRA instructionBlock e
                 ;
 
 
-elseInstruction : ELSE instructionBlock 
-                   
-                  ;
+elseInstruction : ELSE instruction;
 
 
 forInstruction : FOR PARENTESISABRE  declaration  comparison PUNTOYCOMA   operation PARENTESISCIERRA instructionBlock

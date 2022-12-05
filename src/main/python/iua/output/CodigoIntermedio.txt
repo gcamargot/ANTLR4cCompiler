@@ -1,5 +1,15 @@
 push EOF
 jump main 
+Label sumar
+pop a
+pop b
+t0=b
+t1=a
+t1=t1+t0
+r=t1
+pop return0
+push r
+jump return0
 Label main
 t0=5
 x=t0
@@ -24,28 +34,14 @@ t0=x
 t1=a
 t1=t1+t0
 b=t1
-ifnot y==14 jump else1
+ifnot y==14 jump else0
 t0=2*x
 x= t0
-t1=t1+t0
-t1=x
-t1=t1+t0
-y= t1
-jump endif1
-label else1
+jump endif0
+label else0
 t0=-2
 y= t0
-label endif1
-pop return1
-push 0
-jump return1
-Label sumar
-pop a
-pop b
-t1=t1+t0
-t1=a
-t1=t1+t0
-r=t1
+label endif0
 pop return0
-push r
+push 0
 jump return0
